@@ -1,28 +1,23 @@
 interface ProgressProps {
   value: number;
   max?: number;
-  color?: 'emerald' | 'yellow' | 'red';
+  color?: 'default' | 'success' | 'warning' | 'danger';
   label?: string;
   className?: string;
   showValue?: boolean;
 }
 
-const colorClasses: Record<string, string> = {
-  emerald: 'bg-emerald-500',
-  yellow: 'bg-yellow-500',
-  red: 'bg-red-500',
-};
-
-const trackClasses: Record<string, string> = {
-  emerald: 'bg-emerald-100 dark:bg-emerald-900/30',
-  yellow: 'bg-yellow-100 dark:bg-yellow-900/30',
-  red: 'bg-red-100 dark:bg-red-900/30',
+const barClasses: Record<string, string> = {
+  default: 'bg-gray-900 dark:bg-white',
+  success: 'bg-green-600 dark:bg-green-500',
+  warning: 'bg-amber-500',
+  danger: 'bg-red-500',
 };
 
 export function Progress({
   value,
   max = 100,
-  color = 'emerald',
+  color = 'default',
   label,
   className = '',
   showValue = false,
@@ -34,20 +29,20 @@ export function Progress({
       {(label || showValue) && (
         <div className="mb-1.5 flex items-center justify-between">
           {label && (
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
               {label}
             </span>
           )}
           {showValue && (
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-gray-500 dark:text-gray-500">
               {Math.round(percentage)}%
             </span>
           )}
         </div>
       )}
-      <div className={`h-2.5 w-full overflow-hidden rounded-full ${trackClasses[color]}`}>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
         <div
-          className={`h-full rounded-full transition-all duration-500 ease-out ${colorClasses[color]}`}
+          className={`h-full rounded-full transition-all duration-500 ease-out ${barClasses[color]}`}
           style={{ width: `${percentage}%` }}
         />
       </div>

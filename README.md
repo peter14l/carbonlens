@@ -1,310 +1,161 @@
-<div align="center">
+# CarbonLens
 
-# 🌿 CarbonLens
+### Carbon Footprint Awareness Platform
 
-### Your Personal Carbon Intelligence Platform
-
-**Track, Understand, and Reduce Your Carbon Footprint — One Action at a Time**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue.svg)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8.svg)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-8-purple.svg)](https://vitejs.dev/)
-
-*Built for the PromptWars Hackathon — Challenge 3: Carbon Footprint Tracker*
-
-[**Live Demo**](#-live-demo) · [**Features**](#-features) · [**Architecture**](#-architecture) · [**Getting Started**](#-getting-started) · [**Screenshots**](#-screenshots)
-
-</div>
+Built for PromptWars Virtual Challenge 3 — Helping individuals understand, track, and reduce their carbon footprint.
 
 ---
 
-## 🌍 The Problem
+## Vertical
 
-Climate change is the defining crisis of our time, yet most individuals feel disconnected from their personal environmental impact. **CarbonLens** bridges this gap by making carbon footprint tracking:
+**Carbon Footprint Awareness Platform**
 
-- **Effortless** — Quick-add common activities in one tap
-- **Intelligent** — Personalized insights based on YOUR actual behavior
-- **Actionable** — Specific, prioritized recommendations to reduce your impact
-- **Engaging** — Gamification with streaks, badges, and challenges
+CarbonLens is a client-side web application that helps individuals track, understand, and reduce their daily carbon emissions through activity logging, personalized insights, and gamification.
 
 ---
 
-## ✨ Features
+## Approach & Logic
 
-### 📊 Real-Time Dashboard
-- Live carbon footprint gauge with weekly rating (Excellent → High)
-- Category breakdown donut chart (Transport, Energy, Food, Shopping, Waste, Digital)
-- 30-day trend visualization with area charts
-- Today's and this week's total at a glance
-- Current logging streak and total activities
+### Problem Statement
 
-### ⚡ Smart Activity Logger
-- **Quick Add** — One-tap logging for 8 most common activities
-- **Detailed Logger** — 23 activity types across 6 categories
-- **History** — Filterable, sortable activity history with category and date filters
-- **Stats** — Per-category breakdown with horizontal bar charts
-- **Live CO₂ Preview** — See estimated emissions before logging
+Most people underestimate their personal carbon impact because emissions are invisible — there's no price tag on CO₂. The goal: make emissions tangible, visible, and actionable through simple daily logging.
 
-### 🧮 Carbon Calculator
-- Standalone calculator for quick "what-if" estimates
-- Instant comparison: your estimate vs. global/national averages
-- Tree, car-km, and flight equivalents for context
-- Save directly to your activity log
+### Solution Design
 
-### 🧠 Personalized Insights
-- **Comparison Chart** — Your footprint vs. national avg, global avg, and sustainable target
-- **Trend Analysis** — Weekly improving/worsening/stable indicator
-- **Smart Tips** — 22 science-based recommendations prioritized by your top emission categories
-- **Impact Equivalents** — Trees needed to offset, car-km equivalent, flight equivalents
+CarbonLens follows a **track → understand → act** feedback loop:
 
-### 🎯 Goals & Challenges
-- Set custom reduction goals with target percentages and date ranges
-- Quick challenge suggestions: "Go vegetarian for a week", "No car for 7 days"
-- Progress tracking with visual progress bars
-- Active vs. completed goal sections
+1. **Track** — Log daily activities (transport, energy, food, shopping, waste, digital) with minimal friction. One-tap quick-add for common actions, detailed form for less frequent ones.
 
-### 🏆 Gamification
-- 14 achievement badges: First Step, Week Warrior, Monthly Master, Carbon Cutter, Eco Champion, Planet Hero, Zero Hero, Green Commuter, Plant Power, Recycling Pro, Insight Seeker, Goal Setter, Century Club, Digital Minimalist
-- Streak tracking: current and longest
-- Level progression system
+2. **Understand** — Convert raw activities into CO₂ equivalents using science-based emission factors (IPCC, DEFRA, IEA). Visualize breakdown by category, compare against national/global averages, and show relatable equivalents (trees, car-km, flights).
 
-### 👤 Personalized Profile
-- Customizable profile: location, household size, diet, transport, energy source
-- Theme toggle: Light and Dark mode
-- Data portability: Export/Import JSON
-- Multi-step onboarding wizard
+3. **Act** — Surface personalized recommendations based on the user's highest-emission categories. Gamification (streaks, badges, challenges) creates behavioral momentum.
 
-### 🎨 Design
-- **Glassmorphism UI** — Modern frosted-glass aesthetic
-- **Responsive** — Mobile-first with bottom navigation
-- **Dark Mode** — Full dark theme support
-- **Animated** — Smooth transitions and micro-interactions
-- **Accessible** — Proper contrast ratios and focus states
+### Technical Decisions
+
+- **Zustand + localStorage persistence** — No backend needed. Data stays on-device for privacy and offline use. The store persists all activities, profile, goals, and settings automatically.
+
+- **23 activity types across 6 categories** — Covers the major sources of individual emissions: transport (6), energy (3), food (5), shopping (3), waste (3), digital (3). Negative factors for recycling/composting to reflect net-zero calculations.
+
+- **Insight engine** — Analyzes user data to prioritize tips. When transport is the user's #1 category, transport tips appear first. Tips are ranked by impact level (high/medium/low).
+
+- **date-fns over Moment.js** — Smaller bundle, tree-shakeable, better for a client-side app.
+
+- **Recharts for visualizations** — Declarative chart components for the dashboard gauge, category breakdown donut, weekly trend area chart, and comparison bar chart.
+
+### Emission Factors
+
+| Activity | Factor | Source |
+|----------|--------|--------|
+| Car (gasoline) | 0.21 kg CO₂/km | IPCC |
+| Bus | 0.089 kg CO₂/km | DEFRA |
+| Train | 0.041 kg CO₂/km | DEFRA |
+| Flight | 0.255 kg CO₂/km | ICAO |
+| Electricity (grid) | 0.82 kg CO₂/kWh | IEA |
+| Meat meal | 7.2 kg CO₂/meal | Our World in Data |
+| Vegetarian meal | 2.3 kg CO₂/meal | Our World in Data |
+| Recycling | -2.5 kg CO₂/kg | IPCC |
 
 ---
 
-## 🏗️ Architecture
+## How It Works
 
-```
-carbonlens/
-├── public/                          # Static assets
-│   └── carbon-icon.svg              # App icon
-├── src/
-│   ├── components/
-│   │   ├── ui/                      # Reusable UI primitives
-│   │   │   ├── Button.tsx           # 5 variants, 3 sizes
-│   │   │   ├── Card.tsx             # Glass-effect card
-│   │   │   ├── Input.tsx            # Form input with label/error
-│   │   │   ├── Select.tsx           # Dropdown select
-│   │   │   ├── Badge.tsx            # Color-coded tags
-│   │   │   ├── Modal.tsx            # Overlay dialog
-│   │   │   ├── Progress.tsx         # Animated progress bar
-│   │   │   └── EmptyState.tsx       # Placeholder for empty views
-│   │   ├── layout/
-│   │   │   ├── Layout.tsx           # Main layout wrapper
-│   │   │   ├── Sidebar.tsx          # Desktop navigation
-│   │   │   └── MobileNav.tsx        # Bottom mobile nav
-│   │   ├── dashboard/
-│   │   │   ├── StatsOverview.tsx    # 4 stat cards grid
-│   │   │   ├── FootprintGauge.tsx   # Circular SVG gauge
-│   │   │   ├── CategoryBreakdown.tsx # Recharts donut chart
-│   │   │   ├── WeeklyTrend.tsx      # 30-day area chart
-│   │   │   └── RecentActivity.tsx   # Last 5 activities list
-│   │   ├── activities/
-│   │   │   ├── ActivityForm.tsx     # Full activity logger
-│   │   │   ├── ActivityList.tsx     # Filterable history
-│   │   │   ├── QuickAdd.tsx         # One-tap quick add
-│   │   │   └── ActivityStats.tsx    # Category statistics
-│   │   ├── insights/
-│   │   │   ├── InsightCards.tsx     # Main insights view
-│   │   │   ├── ComparisonChart.tsx  # Your vs. averages
-│   │   │   └── TipsList.tsx         # Prioritized tips
-│   │   └── charts/
-│   │       ├── TrendChart.tsx       # Reusable area chart
-│   │       └── BreakdownChart.tsx   # Reusable donut chart
-│   ├── pages/
-│   │   ├── Dashboard.tsx            # Main dashboard
-│   │   ├── Activities.tsx           # Activity management
-│   │   ├── Calculator.tsx           # Quick calculator
-│   │   ├── Insights.tsx             # Insights & badges
-│   │   ├── Goals.tsx                # Goals & challenges
-│   │   ├── Profile.tsx              # User settings
-│   │   └── Onboarding.tsx           # 6-step setup wizard
-│   ├── store/
-│   │   └── useAppStore.ts           # Zustand state management
-│   ├── data/
-│   │   └── emissions.ts             # Emission factors & configs
-│   ├── types/
-│   │   └── index.ts                 # TypeScript interfaces
-│   ├── utils/
-│   │   └── carbon.ts                # Calculation utilities
-│   ├── App.tsx                      # Root component + routing
-│   ├── main.tsx                     # Entry point
-│   └── index.css                    # Global styles + Tailwind
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── index.html
-```
+### Core Flow
 
-### Tech Stack
+1. **Onboarding** — New users complete a 6-step wizard (name, location, household size, diet preference, transport habits, energy source) to personalize their experience.
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Framework** | React 18 | UI components and rendering |
-| **Language** | TypeScript 5 | Type safety and developer experience |
-| **Build Tool** | Vite 8 | Fast dev server and production builds |
-| **Styling** | Tailwind CSS 4 | Utility-first CSS framework |
-| **State** | Zustand | Lightweight state management with persistence |
-| **Charts** | Recharts | Declarative charting library |
-| **Routing** | React Router v7 | Client-side routing |
-| **Icons** | Lucide React | Beautiful, consistent icon set |
-| **Dates** | date-fns | Lightweight date utilities |
-| **IDs** | UUID | Unique identifier generation |
+2. **Activity Logging** — Two modes:
+   - **Quick Add** (Dashboard) — 8 one-tap buttons for the most common activities (car, bus, walk, bike, electricity, gas, meat meal, vegetarian meal). Logs instantly.
+   - **Detailed Form** (Activities page) — Full form with category selection, amount input, date picker, and live CO₂ preview before saving.
 
-### Data Architecture
+3. **Dashboard** — At-a-glance view showing:
+   - Circular gauge with weekly footprint and rating (Excellent/Good/Average/High)
+   - Category breakdown donut chart
+   - 30-day trend area chart
+   - Today's total, this week's total, streak, and activity count
+   - Last 5 activities with "View All" link
 
-- **Client-Side Only** — All data stored in localStorage via Zustand persist middleware
-- **No Backend Required** — Works fully offline after initial load
-- **Portable** — Export/import as JSON for data portability
-- **Privacy-First** — No data ever leaves your browser
+4. **Calculator** — Standalone "what-if" tool. Enter a value → see estimated CO₂ → compare to national/global averages → save directly to log.
+
+5. **Insights** — Personalized analysis:
+   - Comparison chart: Your footprint vs. national avg, global avg, sustainable target
+   - Trend indicator: Improving/worsening/stable
+   - Prioritized tips: Based on YOUR highest categories
+   - Impact equivalents: Trees, car-km, flights
+
+6. **Goals** — Set reduction targets with percentage, date range, and optional challenge suggestions. Track progress with visual bars.
+
+7. **Profile** — Customize settings, theme (light/dark), export/import data as JSON for portability.
+
+### Data Persistence
+
+All data is stored in `localStorage` via Zustand's `persist` middleware. No server calls. No accounts. No data leaves the browser.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/store/useAppStore.ts` | Central Zustand store — activities, profile, goals, badges, onboarding state |
+| `src/data/emissions.ts` | Emission factors, activity configs, categories, badge definitions, insight tips |
+| `src/utils/carbon.ts` | Calculation functions (footprint, streak, breakdown, equivalents) |
+| `src/components/ErrorBoundary.tsx` | Catches render errors, prevents white-screen crashes |
 
 ---
 
-## 🚀 Getting Started
+## Assumptions
 
-### Prerequisites
+1. **Single-user, client-side** — No cross-device sync or multi-user support. Each browser has its own data.
 
-- **Node.js** 18+ (recommended: 22 LTS)
-- **npm** 9+ or **yarn** 1.22+
+2. **Approximate emission factors** — Real emissions vary by vehicle type, energy grid mix, etc. We use representative averages from IPCC/DEFRA/IEA. Not a replacement for a detailed audit.
 
-### Installation
+3. **User honesty** — Accuracy depends on truthful input. No verification mechanism.
+
+4. **No real-time data** — No smart meter or API integrations. All data is manually logged.
+
+5. **Indian context** — National average for India (1.9 kg CO₂/day) used as default comparison. Users can change country in profile.
+
+6. **Offline-first** — Works fully offline after initial load. No PWA service worker yet, but architecture supports it.
+
+7. **Browser compatibility** — Tested on modern browsers (Chrome, Firefox, Edge, Safari). No IE11 support.
+
+---
+
+## Getting Started
 
 ```bash
-# Clone the repository
 git clone https://github.com/peter14l/carbonlens.git
 cd carbonlens
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
-
-# Open in browser
-# http://localhost:5173
+# Open http://localhost:5173
 ```
 
-### Available Scripts
+### Scripts
 
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run typecheck # Run TypeScript type checking
-```
-
-### Build for Production
-
-```bash
-npm run build
-# Output in dist/ directory
-# Deploy to any static hosting (Vercel, Netlify, GitHub Pages, etc.)
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run typecheck` | TypeScript type check |
+| `npm run test` | Run Vitest test suite |
 
 ---
 
-## 📸 Screenshots
+## Tech Stack
 
-> Screenshots will be added after deployment. The app features:
-> - Clean, modern dashboard with glassmorphism cards
-> - Interactive Recharts visualizations
-> - Responsive mobile layout with bottom navigation
-> - Dark mode support
-> - Smooth animations and transitions
-
----
-
-## 🧪 Emission Factors
-
-CarbonLens uses scientifically-backed emission factors:
-
-| Activity | Factor | Unit | Source |
-|----------|--------|------|--------|
-| Car (gasoline) | 0.21 kg CO₂ | per km | IPCC |
-| Bus | 0.089 kg CO₂ | per km | DEFRA |
-| Train | 0.041 kg CO₂ | per km | DEFRA |
-| Flight | 0.255 kg CO₂ | per km | ICAO |
-| Electricity (grid) | 0.82 kg CO₂ | per kWh | IEA |
-| Meat meal | 7.2 kg CO₂ | per meal | Our World in Data |
-| Vegetarian meal | 2.3 kg CO₂ | per meal | Our World in Data |
-| Vegan meal | 1.2 kg CO₂ | per meal | Our World in Data |
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 18 + TypeScript |
+| Build | Vite 8 |
+| Styling | Tailwind CSS 4 |
+| State | Zustand (persist to localStorage) |
+| Charts | Recharts |
+| Routing | React Router v7 |
+| Icons | Lucide React |
+| Dates | date-fns |
+| Testing | Vitest + Testing Library |
 
 ---
 
-## 🎯 Challenge 3 Solution
+## License
 
-### How CarbonLens Addresses the Challenge
-
-**"Design a solution that helps individuals understand, track, and reduce their carbon footprint through simple actions and personalized insights."**
-
-| Challenge Requirement | CarbonLens Solution |
-|----------------------|-------------------|
-| **Understand** | Dashboard with visual breakdown, comparison to averages, educational context (tree/car equivalents) |
-| **Track** | 23 activity types across 6 categories, quick-add and detailed logging, history with filters |
-| **Reduce** | 22 personalized tips, reduction goals, challenges, streaks, and gamification |
-| **Simple Actions** | One-tap quick-add for common activities, minimal friction logging |
-| **Personalized Insights** | Insights engine that analyzes YOUR data and surfaces relevant tips based on YOUR top categories |
-
-### Key Differentiators
-
-1. **No Account Required** — Privacy-first, all data stays on your device
-2. **Works Offline** — PWA-ready architecture
-3. **Science-Based** — IPCC, DEFRA, and IEA emission factors
-4. **Gamification** — 14 badges, streaks, and challenges keep users engaged
-5. **Beautiful Design** — Glassmorphism UI with smooth animations
-6. **Full-Featured** — Calculator, insights, goals, profile — all in one app
-
----
-
-## 🔮 Future Enhancements
-
-- [ ] Backend API for cross-device sync
-- [ ] Social features: compare with friends, leaderboards
-- [ ] AI-powered personalized recommendations
-- [ ] Camera receipt scanning for shopping tracking
-- [ ] Integration with smart meters for real energy data
-- [ ] Carbon offset marketplace
-- [ ] PWA with service worker for offline support
-- [ ] Multi-language support
-- [ ] Accessibility audit and improvements
-- [ ] E2E test suite
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **PromptWars Hackathon** — Challenge 3: Carbon Footprint Tracker
-- **Hack2Skill** — Organizing the hackathon
-- **IPCC** — Intergovernmental Panel on Climate Change (emission factors)
-- **DEFRA** — UK Department for Environment, Food & Rural Affairs (transport factors)
-- **IEA** — International Energy Agency (energy factors)
-- **Our World in Data** — Food emission research
-
----
-
-<div align="center">
-
-**Built with 💚 for the planet**
-
-*Every action counts. Start tracking your impact today.*
-
-</div>
+MIT

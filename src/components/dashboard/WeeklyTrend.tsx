@@ -22,11 +22,11 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+    <div className="rounded-md border border-gray-200 bg-white px-2.5 py-1.5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+      <p className="text-[10px] text-gray-500 dark:text-gray-500">
         {label}
       </p>
-      <p className="mt-0.5 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+      <p className="text-xs font-medium text-gray-900 dark:text-white">
         {formatCarbon(payload[0].value)}
       </p>
     </div>
@@ -39,31 +39,31 @@ export default function WeeklyTrend() {
   const data = getDailyFootprint(activities, 30);
 
   return (
-    <div className="rounded-xl border border-white/60 bg-white/80 p-6 shadow-sm ring-1 ring-emerald-100 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:ring-emerald-900/40">
-      <h3 className="mb-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+    <div className="rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+      <p className="mb-4 text-xs font-medium text-gray-500 dark:text-gray-500">
         30-Day Trend
-      </h3>
+      </p>
 
-      <div className="h-56 sm:h-64">
+      <div className="h-48 sm:h-56">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="carbonGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="currentColor"
-              className="text-slate-100 dark:text-slate-800"
+              className="text-gray-100 dark:text-gray-800"
               vertical={false}
             />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: '#94a3b8' }}
+              tick={{ fontSize: 10, fill: '#9ca3af' }}
               tickFormatter={(value: string) => {
                 const date = new Date(value);
                 return `${date.getMonth() + 1}/${date.getDate()}`;
@@ -73,20 +73,20 @@ export default function WeeklyTrend() {
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: '#94a3b8' }}
+              tick={{ fontSize: 10, fill: '#9ca3af' }}
               tickFormatter={(value: number) => `${value}`}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
               dataKey="total"
-              stroke="#10b981"
-              strokeWidth={2}
+              stroke="#22c55e"
+              strokeWidth={1.5}
               fill="url(#carbonGradient)"
               dot={false}
               activeDot={{
-                r: 5,
-                fill: '#10b981',
+                r: 4,
+                fill: '#22c55e',
                 stroke: '#fff',
                 strokeWidth: 2,
               }}

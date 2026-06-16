@@ -59,16 +59,16 @@ export default function ActivityForm() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Log Activity</h2>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white">Log Activity</h2>
+        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">
           Track what you did and see your carbon impact
         </p>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex gap-1.5 overflow-x-auto">
           {CATEGORIES.map((cat) => {
             const info = CATEGORY_INFO[cat];
             const isActive = selectedCategory === cat;
@@ -81,17 +81,19 @@ export default function ActivityForm() {
                   setSelectedType(null);
                   setQuantity('');
                 }}
+                aria-pressed={isActive}
+                aria-label={`${info.label} category`}
                 className={`
-                  flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium
-                  transition-all duration-200
+                  flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium
+                  transition-colors duration-100
                   ${
                     isActive
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/25'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                      : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800'
                   }
                 `}
               >
-                <span className="text-base">{info.icon}</span>
+                <span>{info.icon}</span>
                 <span>{info.label}</span>
               </button>
             );
@@ -99,11 +101,11 @@ export default function ActivityForm() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-        <p className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+        <p className="mb-3 text-xs font-medium text-gray-500 dark:text-gray-500">
           Choose an activity
         </p>
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           {categoryActivities.map((type) => {
             const config = ACTIVITY_CONFIG[type];
             const isSelected = selectedType === type;
@@ -112,30 +114,22 @@ export default function ActivityForm() {
                 key={type}
                 type="button"
                 onClick={() => handleSelectType(type)}
+                aria-pressed={isSelected}
+                aria-label={`Select ${config.label}: ${config.description}`}
                 className={`
-                  group flex flex-col items-center gap-2 rounded-xl border-2 p-4
-                  transition-all duration-200
+                  flex flex-col items-center gap-1.5 rounded-lg border p-3
+                  transition-colors duration-100
                   ${
                     isSelected
-                      ? 'border-emerald-500 bg-emerald-50 shadow-md shadow-emerald-500/10 dark:border-emerald-400 dark:bg-emerald-950/40'
-                      : 'border-gray-200 bg-gray-50 hover:border-emerald-300 hover:bg-emerald-50/50 dark:border-gray-600 dark:bg-gray-700/50 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/20'
+                      ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800'
+                      : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700'
                   }
                 `}
               >
-                <span className="text-3xl">{config.icon}</span>
-                <span
-                  className={`
-                    text-xs font-medium
-                    ${isSelected ? 'text-emerald-700 dark:text-emerald-300' : 'text-gray-700 dark:text-gray-300'}
-                  `}
-                >
+                <span className="text-2xl">{config.icon}</span>
+                <span className={`text-[11px] font-medium ${isSelected ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
                   {config.label}
                 </span>
-                {config.quickAdd > 0 && (
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                    Default: {config.quickAdd} {config.defaultUnit}
-                  </span>
-                )}
               </button>
             );
           })}
@@ -145,25 +139,25 @@ export default function ActivityForm() {
       {selectedType && selectedConfig && (
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6"
+          className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
         >
-          <div className="mb-4 flex items-center gap-3">
-            <span className="text-2xl">{selectedConfig.icon}</span>
+          <div className="mb-4 flex items-center gap-2.5">
+            <span className="text-xl">{selectedConfig.icon}</span>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                 {selectedConfig.label}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-[11px] text-gray-500 dark:text-gray-500">
                 {selectedConfig.description}
               </p>
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div>
               <label
                 htmlFor="quantity"
-                className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400"
               >
                 Quantity
               </label>
@@ -176,16 +170,10 @@ export default function ActivityForm() {
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   placeholder="0"
-                  className="
-                    w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-20 text-sm text-gray-900
-                    placeholder:text-gray-400
-                    focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20
-                    dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500
-                    dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20
-                  "
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 pr-20 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-gray-500"
                   required
                 />
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-gray-500 dark:text-gray-500">
                   {selectedConfig.defaultUnit}
                 </span>
               </div>
@@ -194,9 +182,9 @@ export default function ActivityForm() {
             <div>
               <label
                 htmlFor="date"
-                className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400"
               >
-                <Calendar className="h-3.5 w-3.5" />
+                <Calendar className="h-3 w-3" />
                 Date
               </label>
               <input
@@ -204,12 +192,7 @@ export default function ActivityForm() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="
-                  w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900
-                  focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20
-                  dark:border-gray-600 dark:bg-gray-800 dark:text-white
-                  dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20
-                "
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 required
               />
             </div>
@@ -217,83 +200,52 @@ export default function ActivityForm() {
             <div>
               <label
                 htmlFor="notes"
-                className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400"
               >
-                <FileText className="h-3.5 w-3.5" />
-                Notes{' '}
-                <span className="text-gray-400 dark:text-gray-500">(optional)</span>
+                <FileText className="h-3 w-3" />
+                Notes <span className="text-gray-400">(optional)</span>
               </label>
               <textarea
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Any additional details..."
+                placeholder="Any details..."
                 rows={2}
-                className="
-                  w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900
-                  placeholder:text-gray-400
-                  focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20
-                  dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500
-                  dark:focus:border-emerald-400 dark:focus:ring-emerald-400/20
-                "
+                className="w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </div>
           </div>
 
           {previewCarbon !== null && (
             <div
-              className={`
-                mt-4 flex items-center gap-3 rounded-xl border p-4
-                ${
-                  previewCarbon <= 0
-                    ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/40'
-                    : 'border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/40'
-                }
-              `}
+              role="status"
+              aria-live="polite"
+              aria-label={`Estimated carbon footprint: ${formatCarbon(previewCarbon)}`}
+              className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-800/50"
             >
-              <Sparkles
-                className={`
-                  h-5 w-5
-                  ${previewCarbon <= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}
-                `}
-              />
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Estimated CO₂
-                </p>
-                <p
-                  className={`
-                    text-lg font-bold
-                    ${previewCarbon <= 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}
-                  `}
-                >
-                  {formatCarbon(previewCarbon)}
-                </p>
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-gray-400" />
+                <span className="text-xs text-gray-500 dark:text-gray-500">Estimated CO₂</span>
               </div>
+              <p className={`mt-1 text-lg font-semibold ${previewCarbon <= 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
+                {formatCarbon(previewCarbon)}
+              </p>
             </div>
           )}
 
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-4 flex items-center gap-3">
             <button
               type="submit"
               disabled={!quantity || parseFloat(quantity) <= 0}
-              className="
-                inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5
-                text-sm font-medium text-white shadow-sm shadow-emerald-500/25
-                transition-colors duration-200
-                hover:bg-emerald-700 active:bg-emerald-800
-                focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
-                disabled:cursor-not-allowed disabled:opacity-50
-                dark:focus:ring-offset-gray-800
-              "
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3.5 w-3.5" />
               Log Activity
             </button>
 
             {submitted && (
-              <span className="animate-pulse text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                Activity logged!
+              <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                Logged!
               </span>
             )}
           </div>

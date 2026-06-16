@@ -32,21 +32,21 @@ export default function QuickAdd() {
       addActivity(type, config.quickAdd);
 
       setAnimating({ type, carbon });
-      setTimeout(() => setAnimating(null), 1500);
+      setTimeout(() => setAnimating(null), 1200);
     },
     [addActivity]
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Quick Add</h2>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Tap to instantly log common activities with default amounts
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white">Quick Add</h2>
+        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">
+          Tap to log common activities with default amounts
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
         {QUICK_ADD_ACTIVITIES.map((type) => {
           const config = ACTIVITY_CONFIG[type];
           const carbon = calculateCarbon(type, config.quickAdd);
@@ -57,55 +57,45 @@ export default function QuickAdd() {
               key={type}
               type="button"
               onClick={() => handleQuickAdd(type)}
+              aria-label={`Quick add: ${config.label}, ${config.quickAdd} ${config.defaultUnit}, ${formatCarbon(carbon)} CO₂`}
               className={`
-                group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl
-                border-2 p-5 text-center transition-all duration-300
+                group relative flex flex-col items-center gap-2 overflow-hidden rounded-lg
+                border p-4 text-center transition-all duration-200
                 ${
                   isAnimating
-                    ? 'scale-95 border-emerald-400 bg-emerald-50 shadow-lg shadow-emerald-500/20 dark:border-emerald-500 dark:bg-emerald-950/50'
-                    : 'border-gray-200 bg-white hover:border-emerald-300 hover:bg-emerald-50/50 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/20'
+                    ? 'border-green-500 bg-green-50 dark:border-green-400 dark:bg-green-950/30'
+                    : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700'
                 }
               `}
             >
               <div
                 className={`
-                  flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300
-                  bg-gray-100 group-hover:scale-110 dark:bg-gray-700
-                  ${isAnimating ? 'scale-110' : ''}
+                  flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 transition-transform duration-200
+                  group-hover:scale-105 dark:bg-gray-800
+                  ${isAnimating ? 'scale-105' : ''}
                 `}
               >
-                <span className="text-3xl">{config.icon}</span>
+                <span className="text-xl">{config.icon}</span>
               </div>
 
               <div className="w-full">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                <p className="text-xs font-medium text-gray-900 dark:text-white">
                   {config.label}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-500">
                   {config.quickAdd} {config.defaultUnit}
                 </p>
               </div>
 
-              <div
-                className={`
-                  w-full rounded-lg py-1.5 text-xs font-bold
-                  ${
-                    carbon <= 0
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
-                      : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                  }
-                `}
-              >
+              <div className="w-full rounded-md bg-gray-50 py-1 text-[10px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
                 {formatCarbon(carbon)} CO₂
               </div>
 
               {isAnimating && (
-                <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-emerald-500/90 backdrop-blur-sm">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                      <Check className="h-6 w-6 text-white" strokeWidth={3} />
-                    </div>
-                    <span className="text-sm font-bold text-white">
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-gray-900/90 dark:bg-white/90">
+                  <div className="flex flex-col items-center gap-1">
+                    <Check className="h-5 w-5 text-white dark:text-gray-900" strokeWidth={2.5} />
+                    <span className="text-xs font-medium text-white dark:text-gray-900">
                       +{formatCarbon(animating?.carbon ?? 0)}
                     </span>
                   </div>

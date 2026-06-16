@@ -17,18 +17,11 @@ export default function Layout() {
   }, [theme]);
 
   return (
-    <div
-      className={`
-        flex min-h-screen
-        bg-gray-50 dark:bg-gray-950
-        text-gray-900 dark:text-gray-100
-        transition-colors duration-300
-      `}
-    >
+    <div className="flex min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <Sidebar />
 
-      <main className="flex-1 min-h-screen lg:pb-0 pb-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <main id="main-content" className="flex-1 min-h-screen lg:pb-0 pb-14">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
           <Outlet />
         </div>
       </main>

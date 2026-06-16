@@ -1,25 +1,10 @@
 import { Link } from 'react-router-dom';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import { ChevronRight } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { formatCarbon } from '../../utils/carbon';
 import { CATEGORY_INFO } from '../../data/emissions';
 import type { Category } from '../../types';
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
-}
 
 export default function RecentActivity() {
   const activities = useAppStore((s) => s.activities);
@@ -30,66 +15,64 @@ export default function RecentActivity() {
 
   if (recent.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-white/60 bg-white/80 p-6 shadow-sm ring-1 ring-emerald-100 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:ring-emerald-900/40">
-        <h3 className="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+      <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-500">
           Recent Activity
-        </h3>
-        <p className="text-sm text-slate-400 dark:text-slate-500">
-          No activities yet. Start tracking!
+        </p>
+        <p className="mt-1 text-xs text-gray-400 dark:text-gray-600">
+          No activities yet
         </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-white/60 bg-white/80 p-6 shadow-sm ring-1 ring-emerald-100 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:ring-emerald-900/40">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400">
+    <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-3 dark:border-gray-800">
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-500">
           Recent Activity
-        </h3>
+        </p>
         <Link
           to="/activities"
-          className="text-xs font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+          className="text-[11px] font-medium text-gray-500 hover:text-gray-900 dark:text-gray-500 dark:hover:text-white"
         >
           View all
         </Link>
       </div>
 
-      <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+      <ul className="divide-y divide-gray-100 dark:divide-gray-800">
         {recent.map((activity) => {
           const info = CATEGORY_INFO[activity.category as Category];
-          const Icon = info?.icon ?? 'Leaf';
 
           return (
             <li key={activity.id}>
               <Link
-                to={`/activities/${activity.id}`}
-                className="flex items-center gap-3 rounded-lg py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2"
+                to="/activities"
+                className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"
                   style={{
-                    backgroundColor: info?.bgColor ?? '#ecfdf5',
-                    color: info?.color ?? '#10b981',
+                    backgroundColor: info?.bgColor ?? '#f3f4f6',
                   }}
                 >
                   <span className="text-sm">{info?.icon ?? '🌿'}</span>
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                  <p className="truncate text-sm text-gray-900 dark:text-white">
                     {activity.label}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {formatDate(activity.date)}
+                  <p className="text-[11px] text-gray-500 dark:text-gray-500">
+                    {formatDistanceToNow(parseISO(activity.date), { addSuffix: true })}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
                     {formatCarbon(activity.carbonKg)}
                   </span>
-                  <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
+                  <ChevronRight className="h-3 w-3 text-gray-300 dark:text-gray-600" />
                 </div>
               </Link>
             </li>

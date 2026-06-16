@@ -6,7 +6,7 @@ import {
 } from '../../utils/carbon';
 
 const RADIUS = 70;
-const STROKE = 10;
+const STROKE = 8;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const VIEW_SIZE = (RADIUS + STROKE) * 2;
 
@@ -21,10 +21,10 @@ export default function FootprintGauge() {
   const offset = CIRCUMFERENCE * (1 - progress);
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-white/60 bg-white/80 p-6 shadow-sm ring-1 ring-emerald-100 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:ring-emerald-900/40">
-      <h3 className="mb-4 text-sm font-medium text-slate-500 dark:text-slate-400">
-        Weekly Carbon Footprint
-      </h3>
+    <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+      <p className="mb-4 text-xs font-medium text-gray-500 dark:text-gray-500">
+        Weekly Footprint
+      </p>
 
       <div className="relative">
         <svg
@@ -40,7 +40,7 @@ export default function FootprintGauge() {
             fill="none"
             stroke="currentColor"
             strokeWidth={STROKE}
-            className="text-slate-100 dark:text-slate-800"
+            className="text-gray-100 dark:text-gray-800"
           />
           <circle
             cx={VIEW_SIZE / 2}
@@ -56,29 +56,27 @@ export default function FootprintGauge() {
             style={{
               stroke:
                 progress < 0.5
-                  ? '#10b981'
+                  ? '#22c55e'
                   : progress < 0.75
-                    ? '#f59e0b'
+                    ? '#eab308'
                     : '#ef4444',
             }}
           />
         </svg>
 
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
+          <span className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
             {formatCarbon(weeklyKg)}
           </span>
-          <span className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            / {formatCarbon(TARGET_KG_PER_WEEK)} target
+          <span className="mt-0.5 text-[11px] text-gray-500 dark:text-gray-500">
+            of {formatCarbon(TARGET_KG_PER_WEEK)}
           </span>
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2 rounded-full px-3 py-1.5">
-        <span className="text-lg">{rating.emoji}</span>
-        <span
-          className={`text-sm font-semibold ${rating.color}`}
-        >
+      <div className="mt-4 flex items-center gap-1.5">
+        <span className="text-sm">{rating.emoji}</span>
+        <span className={`text-xs font-medium ${rating.color}`}>
           {rating.label}
         </span>
       </div>

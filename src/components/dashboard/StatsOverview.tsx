@@ -5,43 +5,36 @@ import {
   getWeekFootprint,
   formatCarbon,
 } from '../../utils/carbon';
+import type { Activity as ActivityType } from '../../types';
 
 const stats = [
   {
     key: 'today' as const,
-    label: "Today's Footprint",
+    label: 'Today',
     icon: TrendingUp,
-    getValue: (activities: any[]) => formatCarbon(getTodayFootprint(activities)),
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    ring: 'ring-emerald-200 dark:ring-emerald-800',
+    getValue: (activities: ActivityType[]) => formatCarbon(getTodayFootprint(activities)),
+    color: 'text-gray-900 dark:text-white',
   },
   {
     key: 'week' as const,
     label: 'This Week',
     icon: CalendarCheck,
-    getValue: (activities: any[]) => formatCarbon(getWeekFootprint(activities)),
-    color: 'text-teal-600 dark:text-teal-400',
-    bg: 'bg-teal-50 dark:bg-teal-950/40',
-    ring: 'ring-teal-200 dark:ring-teal-800',
+    getValue: (activities: ActivityType[]) => formatCarbon(getWeekFootprint(activities)),
+    color: 'text-gray-900 dark:text-white',
   },
   {
     key: 'streak' as const,
-    label: 'Current Streak',
+    label: 'Streak',
     icon: Flame,
-    getValue: (_: any[], streak: number) => `${streak} days`,
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-50 dark:bg-amber-950/40',
-    ring: 'ring-amber-200 dark:ring-amber-800',
+    getValue: (_: ActivityType[], streak: number) => `${streak}d`,
+    color: 'text-gray-900 dark:text-white',
   },
   {
     key: 'total' as const,
-    label: 'Total Activities',
+    label: 'Activities',
     icon: Activity,
-    getValue: (activities: any[]) => `${activities.length}`,
-    color: 'text-violet-600 dark:text-violet-400',
-    bg: 'bg-violet-50 dark:bg-violet-950/40',
-    ring: 'ring-violet-200 dark:ring-violet-800',
+    getValue: (activities: ActivityType[]) => `${activities.length}`,
+    color: 'text-gray-900 dark:text-white',
   },
 ] as const;
 
@@ -51,26 +44,22 @@ export default function StatsOverview() {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:gap-4">
-      {stats.map(({ key, label, icon: Icon, getValue, color, bg, ring }) => (
+      {stats.map(({ key, label, icon: Icon, getValue, color }) => (
         <div
           key={key}
-          className={`relative flex items-center gap-3 rounded-xl border border-white/60 bg-white/80 p-4 shadow-sm ring-1 ${ring} backdrop-blur-sm transition hover:shadow-md dark:border-slate-700/60 dark:bg-slate-900/80 sm:gap-4 sm:p-5`}
+          className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900 sm:p-5"
         >
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${bg} sm:h-12 sm:w-12`}
-          >
-            <Icon className={`h-5 w-5 ${color} sm:h-6 sm:w-6`} strokeWidth={1.8} />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-sm">
+          <div className="flex items-center gap-3">
+            <Icon className={`h-4 w-4 text-gray-400 dark:text-gray-500`} strokeWidth={1.5} />
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-500">
               {label}
-            </p>
-            <p className="mt-0.5 truncate text-lg font-semibold text-slate-900 dark:text-slate-100 sm:text-xl">
-              {key === 'streak'
-                ? getValue(activities, currentStreak)
-                : getValue(activities)}
-            </p>
+            </span>
           </div>
+          <p className={`mt-2 text-xl font-semibold tracking-tight ${color} sm:text-2xl`}>
+            {key === 'streak'
+              ? getValue(activities, currentStreak)
+              : getValue(activities)}
+          </p>
         </div>
       ))}
     </div>

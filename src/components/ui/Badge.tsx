@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 
-type BadgeVariant = 'emerald' | 'gray' | 'red' | 'yellow' | 'blue' | 'purple';
+type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info' | 'muted';
 
 interface BadgeProps {
   children: ReactNode;
@@ -9,19 +9,19 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  gray: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-  red: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  yellow: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300',
-  blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  purple: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+  default: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+  success: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  warning: 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  danger: 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  info: 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  muted: 'bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-500',
 };
 
-export function Badge({ children, variant = 'emerald', className = '' }: BadgeProps) {
+export function Badge({ children, variant = 'default', className = '' }: BadgeProps) {
   return (
     <span
       className={`
-        inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+        inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium
         ${variantClasses[variant]}
         ${className}
       `}

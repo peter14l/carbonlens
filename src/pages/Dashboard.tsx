@@ -7,6 +7,7 @@ import FootprintGauge from '../components/dashboard/FootprintGauge';
 import CategoryBreakdown from '../components/dashboard/CategoryBreakdown';
 import WeeklyTrend from '../components/dashboard/WeeklyTrend';
 import RecentActivity from '../components/dashboard/RecentActivity';
+import SmartAssistant from '../components/dashboard/SmartAssistant';
 
 export default function Dashboard() {
   const profile = useAppStore((s) => s.profile);
@@ -14,30 +15,30 @@ export default function Dashboard() {
 
   if (activities.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-          <Leaf className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
+      <div className="flex flex-col items-center justify-center py-24">
+        <div className="mb-4 rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
+          <Leaf className="h-6 w-6 text-gray-400 dark:text-gray-500" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
           Welcome to CarbonLens
         </h1>
-        <p className="mt-2 max-w-md text-center text-gray-500 dark:text-gray-400">
-          Start tracking your carbon footprint and discover ways to reduce your impact on the planet.
+        <p className="mt-1.5 max-w-sm text-center text-sm text-gray-500 dark:text-gray-500">
+          Start tracking your carbon footprint to see insights and trends.
         </p>
-        <div className="mt-8 flex gap-3">
+        <div className="mt-6 flex gap-2">
           <Link
             to="/activities"
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-medium text-white shadow-sm shadow-emerald-500/25 transition hover:bg-emerald-700 active:bg-emerald-800"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
           >
-            <Plus className="h-4 w-4" />
-            Log Your First Activity
+            <Plus className="h-3.5 w-3.5" />
+            Log Activity
           </Link>
           <Link
             to="/calculator"
-            className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
           >
             Quick Estimate
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>
@@ -45,16 +46,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {profile.name ? `Hello, ${profile.name}` : 'Dashboard'}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {format(new Date(), 'EEEE, MMMM d, yyyy')}
-          </p>
-        </div>
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+          {profile.name ? `Hello, ${profile.name}` : 'Dashboard'}
+        </h1>
+        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-500">
+          {format(new Date(), 'EEEE, MMMM d, yyyy')}
+        </p>
       </div>
 
       <StatsOverview />
@@ -63,10 +62,12 @@ export default function Dashboard() {
         <FootprintGauge />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <CategoryBreakdown />
         <WeeklyTrend />
       </div>
+
+      <SmartAssistant />
 
       <RecentActivity />
     </div>

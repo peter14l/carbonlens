@@ -18,13 +18,11 @@ interface ComparisonChartProps {
   sustainableTarget: number;
 }
 
-const BAR_DATA_KEY = 'value';
-
 const CATEGORIES = [
-  { key: 'you', label: 'You', color: '#10b981' },
-  { key: 'national', label: 'National Avg', color: '#f59e0b' },
-  { key: 'global', label: 'Global Avg', color: '#6366f1' },
-  { key: 'target', label: 'Sustainable', color: '#06b6d4' },
+  { key: 'you', label: 'You', color: '#111827' },
+  { key: 'national', label: 'National', color: '#f59e0b' },
+  { key: 'global', label: 'Global', color: '#6366f1' },
+  { key: 'target', label: 'Target', color: '#22c55e' },
 ] as const;
 
 function CustomTooltip({
@@ -37,10 +35,10 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
   const item = payload[0].payload;
   return (
-    <div className="rounded-lg border border-emerald-700/40 bg-gray-900/95 px-3 py-2 shadow-lg backdrop-blur-sm">
-      <p className="text-xs text-gray-400">{item.label}</p>
-      <p className="text-sm font-semibold text-emerald-400">
-        {item.value.toFixed(1)} kg CO₂ / week
+    <div className="rounded-md border border-gray-200 bg-white px-2.5 py-1.5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+      <p className="text-[10px] text-gray-500">{item.label}</p>
+      <p className="text-xs font-medium text-gray-900 dark:text-white">
+        {item.value.toFixed(1)} kg CO₂/wk
       </p>
     </div>
   );
@@ -71,29 +69,29 @@ export default function ComparisonChart({
 
   return (
     <div className="w-full">
-      <ResponsiveContainer width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={200}>
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 5, right: 50, left: 10, bottom: 5 }}
+          margin={{ top: 5, right: 40, left: 5, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
           <XAxis
             type="number"
-            tick={{ fill: '#9ca3af', fontSize: 11 }}
+            tick={{ fill: '#9ca3af', fontSize: 10 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             type="category"
             dataKey="label"
-            tick={{ fill: '#d1d5db', fontSize: 12 }}
+            tick={{ fill: '#6b7280', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
-            width={95}
+            width={65}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(16,185,129,0.06)' }} />
-          <Bar dataKey={BAR_DATA_KEY} radius={[0, 6, 6, 0]} barSize={28}>
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.02)' }} />
+          <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={22}>
             {data.map((entry) => (
               <Cell key={entry.label} fill={entry.color} />
             ))}
@@ -101,7 +99,7 @@ export default function ComparisonChart({
               dataKey="value"
               position="right"
               formatter={(v) => `${Number(v ?? 0).toFixed(0)}`}
-              style={{ fill: '#d1d5db', fontSize: 11 }}
+              style={{ fill: '#9ca3af', fontSize: 10 }}
             />
           </Bar>
         </BarChart>

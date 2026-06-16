@@ -11,21 +11,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-sm',
+    'bg-gray-900 text-white hover:bg-gray-800 active:bg-gray-950 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100',
   secondary:
-    'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600',
+    'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm',
+    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
   ghost:
-    'bg-transparent text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700',
+    'text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800',
   outline:
-    'border border-emerald-600 text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 dark:border-emerald-400 dark:text-emerald-400 dark:hover:bg-emerald-900/30',
+    'border border-gray-200 text-gray-700 hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg',
-  md: 'px-4 py-2 text-sm rounded-xl',
-  lg: 'px-6 py-3 text-base rounded-xl',
+  sm: 'px-3 py-1.5 text-xs rounded-md',
+  md: 'px-4 py-2 text-sm rounded-lg',
+  lg: 'px-5 py-2.5 text-sm rounded-lg',
 };
 
 export function Button({
@@ -44,8 +44,8 @@ export function Button({
       className={`
         inline-flex items-center justify-center font-medium
         transition-colors duration-150
-        focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
-        disabled:opacity-50 disabled:cursor-not-allowed
+        focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-gray-500
+        disabled:opacity-40 disabled:cursor-not-allowed
         ${variantClasses[variant]}
         ${sizeClasses[size]}
         ${className}
