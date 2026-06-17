@@ -49,4 +49,19 @@ describe('calculateStreak', () => {
     const result = calculateStreak(activities);
     expect(result.longest).toBe(3);
   });
+
+  it('keeps streak active if logged yesterday but not today', () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const dates: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(yesterday);
+      d.setDate(d.getDate() - i);
+      dates.push(d.toISOString().split('T')[0]);
+    }
+
+    const activities = dates.map((date) => ({ date }) as Activity);
+    const result = calculateStreak(activities);
+    expect(result.current).toBe(3);
+  });
 });

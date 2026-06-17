@@ -17,6 +17,7 @@ function getActivityTypesForCategory(category: Category): ActivityType[] {
 export default function Calculator() {
   const addActivity = useAppStore((s) => s.addActivity);
   const activities = useAppStore((s) => s.activities);
+  const profile = useAppStore((s) => s.profile);
 
   const [selectedCategory, setSelectedCategory] = useState<Category>('transport');
   const [selectedType, setSelectedType] = useState<ActivityType | null>(null);
@@ -39,18 +40,29 @@ export default function Calculator() {
     const trees = getTreeEquivalents(carbonKg);
     const carKm = getCarKmEquivalent(carbonKg);
 
-    const globalAvgDaily = NATIONAL_AVERAGES['Global Average'] * 7 / 7;
-    const usAvgDaily = NATIONAL_AVERAGES['United States'] * 7 / 7;
+    // Extract national average daily based on profile location, fallback to US
+    const normalizedLocation = profile.location.toLowerCase();
+    let userCountry = 'US';
+    let userCountryAvgDaily = NATIONAL_AVERAGES['United States'];
+    for (const [country, average] of Object.entries(NATIONAL_AVERAGES)) {
+      if (normalizedLocation.includes(country.toLowerCase())) {
+        userCountry = country;
+        userCountryAvgDaily = average;
+        break;
+      }
+    }
+
+    const globalAvgDaily = NATIONAL_AVERAGES['Global Average'];
 
     const weekTotal = activities
       .filter((a) => new Date(a.date) >= getWeekStart())
       .reduce((sum, a) => sum + a.carbonKg, 0);
 
     const pctOfGlobalDaily = globalAvgDaily > 0 ? Math.round((carbonKg / globalAvgDaily) * 100) : 0;
-    const pctOfUSDaily = usAvgDaily > 0 ? Math.round((carbonKg / usAvgDaily) * 100) : 0;
+    const pctOfUserDaily = userCountryAvgDaily > 0 ? Math.round((carbonKg / userCountryAvgDaily) * 100) : 0;
 
-    return { carbonKg, trees, carKm, pctOfGlobalDaily, pctOfUSDaily, weekTotal };
-  }, [selectedType, quantity, activities]);
+    return { carbonKg, trees, carKm, pctOfGlobalDaily, pctOfUserDaily, userCountry, weekTotal };
+  }, [selectedType, quantity, activities, profile.location]);
 
   function handleSelectType(type: ActivityType) {
     setSelectedType(type);
@@ -182,9 +194,9 @@ export default function Calculator() {
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500 dark:text-gray-500">vs US daily avg</span>
-                <span className={`font-medium ${result.pctOfUSDaily > 100 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                  {result.pctOfUSDaily}%
+                <span className="text-gray-500 dark:text-gray-500">vs {result.userCountry} daily avg</span>
+                <span className={`font-medium ${result.pctOfUserDaily > 100 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                  {result.pctOfUserDaily}%
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">

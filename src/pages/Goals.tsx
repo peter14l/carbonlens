@@ -31,6 +31,7 @@ export default function Goals() {
   const goals = useAppStore((s) => s.goals);
   const addGoal = useAppStore((s) => s.addGoal);
   const removeGoal = useAppStore((s) => s.removeGoal);
+  const updateGoal = useAppStore((s) => s.updateGoal);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -97,9 +98,14 @@ export default function Goals() {
               <div key={goal.id} className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="rounded-md bg-gray-100 p-1.5 dark:bg-gray-800">
-                      <Target className="h-3.5 w-3.5 text-gray-500" />
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => updateGoal(goal.id, { completed: true })}
+                      aria-label={`Mark "${goal.title}" as completed`}
+                      className="group flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 hover:border-green-500 hover:bg-green-50 dark:border-gray-800 dark:hover:border-green-950/20 dark:hover:bg-green-950/10 transition-all"
+                    >
+                      <Circle className="h-3.5 w-3.5 text-gray-400 group-hover:text-green-600 dark:text-gray-500" />
+                    </button>
                     <div>
                       <h3 className="text-sm font-medium text-gray-900 dark:text-white">{goal.title}</h3>
                       <div className="mt-0.5 flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-500">
@@ -137,11 +143,28 @@ export default function Goals() {
         <div className="space-y-2">
           <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">Completed</p>
           {completedGoals.map((goal) => (
-            <div key={goal.id} className="flex items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 dark:border-gray-800 dark:bg-gray-900/50">
-              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-500" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium text-gray-600 line-through dark:text-gray-400">{goal.title}</p>
+            <div key={goal.id} className="group flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 dark:border-gray-800 dark:bg-gray-900/50">
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={() => updateGoal(goal.id, { completed: false })}
+                  aria-label={`Mark "${goal.title}" as active`}
+                  className="flex h-5 w-5 items-center justify-center rounded text-green-500 hover:text-gray-400 transition-colors"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                </button>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-medium text-gray-600 line-through dark:text-gray-400">{goal.title}</p>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => removeGoal(goal.id)}
+                aria-label={`Delete completed goal "${goal.title}"`}
+                className="opacity-0 group-hover:opacity-100 rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/40 transition-opacity"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
             </div>
           ))}
         </div>

@@ -15,8 +15,9 @@ function TrendIcon({ trend }: { trend: 'up' | 'down' | 'stable' }) {
 export default function Insights() {
   const activities = useAppStore((s) => s.activities);
   const badges = useAppStore((s) => s.badges);
+  const profile = useAppStore((s) => s.profile);
 
-  const insights = useMemo(() => generateInsights(activities), [activities]);
+  const insights = useMemo(() => generateInsights(activities, profile.location), [activities, profile.location]);
 
   const trendLabel = {
     improving: 'Your footprint is decreasing.',

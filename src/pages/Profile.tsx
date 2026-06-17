@@ -39,6 +39,7 @@ export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const [name, setName] = useState(profile.name);
   const [location, setLocation] = useState(profile.location);
@@ -51,6 +52,8 @@ export default function Profile() {
 
   function handleSave() {
     setProfile({ name, location, householdSize: parseInt(householdSize, 10) || 1, diet, hasCar, carType, usesPublicTransport, energySource });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   }
 
   function handleExport() {
@@ -107,13 +110,16 @@ export default function Profile() {
           <p className="text-xs font-medium text-gray-500 dark:text-gray-500">Diet</p>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {DIET_OPTIONS.map((opt) => (
-            <button key={opt.value} type="button" onClick={() => setDiet(opt.value)} className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-colors ${diet === opt.value ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800' : 'border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700'}`}>
-              <span className="text-xl">{opt.icon}</span>
-              <span className={`text-xs font-medium ${diet === opt.value ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{opt.label}</span>
-              <span className="text-[9px] text-gray-500">{opt.desc}</span>
-            </button>
-          ))}
+          {DIET_OPTIONS.map((opt) => {
+            const isActive = diet === opt.value;
+            return (
+              <button key={opt.value} type="button" onClick={() => setDiet(opt.value)} aria-pressed={isActive} className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-colors ${isActive ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800' : 'border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700'}`}>
+                <span className="text-xl">{opt.icon}</span>
+                <span className={`text-xs font-medium ${isActive ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>{opt.label}</span>
+                <span className="text-[9px] text-gray-500">{opt.desc}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -131,11 +137,14 @@ export default function Profile() {
           </div>
           {hasCar && (
             <div className="flex gap-1.5">
-              {CAR_TYPES.filter((t) => t.value !== 'none').map((type) => (
-                <button key={type.value} type="button" onClick={() => setCarType(type.value)} className={`flex-1 rounded-md border px-2 py-1.5 text-[11px] font-medium transition-colors ${carType === type.value ? 'border-gray-900 bg-gray-50 text-gray-900 dark:border-white dark:bg-gray-800 dark:text-white' : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-800 dark:text-gray-400'}`}>
-                  {type.label}
-                </button>
-              ))}
+              {CAR_TYPES.filter((t) => t.value !== 'none').map((type) => {
+                const isActive = carType === type.value;
+                return (
+                  <button key={type.value} type="button" onClick={() => setCarType(type.value)} aria-pressed={isActive} className={`flex-1 rounded-md border px-2 py-1.5 text-[11px] font-medium transition-colors ${isActive ? 'border-gray-900 bg-gray-50 text-gray-900 dark:border-white dark:bg-gray-800 dark:text-white' : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-800 dark:text-gray-400'}`}>
+                    {type.label}
+                  </button>
+                );
+              })}
             </div>
           )}
           <div className="flex items-center justify-between">
@@ -153,17 +162,27 @@ export default function Profile() {
           <p className="text-xs font-medium text-gray-500 dark:text-gray-500">Energy</p>
         </div>
         <div className="grid grid-cols-4 gap-1.5">
-          {ENERGY_SOURCES.map((source) => (
-            <button key={source.value} type="button" onClick={() => setEnergySource(source.value)} className={`flex flex-col items-center gap-1 rounded-md border p-2.5 transition-colors ${energySource === source.value ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800' : 'border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700'}`}>
-              <span className="text-base">{source.icon}</span>
-              <span className={`text-[10px] font-medium ${energySource === source.value ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>{source.label}</span>
-            </button>
-          ))}
+          {ENERGY_SOURCES.map((source) => {
+            const isActive = energySource === source.value;
+            return (
+              <button key={source.value} type="button" onClick={() => setEnergySource(source.value)} aria-pressed={isActive} className={`flex flex-col items-center gap-1 rounded-md border p-2.5 transition-colors ${isActive ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800' : 'border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700'}`}>
+                <span className="text-base">{source.icon}</span>
+                <span className={`text-[10px] font-medium ${isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>{source.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <Button onClick={handleSave} size="sm">Save Profile</Button>
+      <div className="flex items-center justify-end gap-3">
+        {saved && (
+          <span className="text-xs font-medium text-green-600 dark:text-green-400 animate-fade-in">
+            Saved successfully!
+          </span>
+        )}
+        <Button onClick={handleSave} size="sm">
+          {saved ? 'Saved!' : 'Save Profile'}
+        </Button>
       </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">

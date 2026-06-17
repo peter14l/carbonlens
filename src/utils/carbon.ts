@@ -1,6 +1,6 @@
 import type { Activity, Category, WeeklySnapshot, InsightsData } from '../types';
 import { EMISSION_FACTORS, INSIGHT_TIPS, NATIONAL_AVERAGES } from '../data/emissions';
-import { startOfWeek, endOfWeek, subWeeks, format, parseISO, differenceInWeeks } from 'date-fns';
+import { startOfWeek, endOfWeek, subWeeks, subDays, format, parseISO, differenceInWeeks } from 'date-fns';
 
 export function calculateCarbon(type: Activity['type'], quantity: number): number {
   const factor = EMISSION_FACTORS[type];
@@ -86,7 +86,7 @@ export function getDailyFootprint(activities: Activity[], days: number = 30): { 
   return result;
 }
 
-export function generateInsights(activities: Activity[]): InsightsData {
+export function generateInsights(activities: Activity[], location: string = ''): InsightsData {
   const currentWeek = getWeekFootprint(activities);
   const previousWeekActivities = activities.filter(a => {
     const d = parseISO(a.date);
@@ -116,11 +116,21 @@ export function generateInsights(activities: Activity[]): InsightsData {
     currentWeek < previousWeek * 0.9 ? 'improving' :
     currentWeek > previousWeek * 1.1 ? 'worsening' : 'stable';
 
+  // Extract national average daily based on profile location, fallback to Global Average
+  const normalizedLocation = location.toLowerCase();
+  let nationalAvgDaily = NATIONAL_AVERAGES['Global Average'];
+  for (const [country, average] of Object.entries(NATIONAL_AVERAGES)) {
+    if (normalizedLocation.includes(country.toLowerCase())) {
+      nationalAvgDaily = average;
+      break;
+    }
+  }
+
   return {
     tips: relevantTips,
     comparison: {
       yourFootprint: Math.round(currentWeek * 10) / 10,
-      nationalAverage: NATIONAL_AVERAGES['Global Average'] * (currentWeek > 0 ? 7 : 0),
+      nationalAverage: nationalAvgDaily * (currentWeek > 0 ? 7 : 0),
       globalAverage: NATIONAL_AVERAGES['Global Average'] * 7,
       targetSustainable: NATIONAL_AVERAGES['Sustainable Target'] * 7,
     },
@@ -160,9 +170,9 @@ export function calculateStreak(activities: Activity[]): { current: number; long
   }
   longestStreak = Math.max(longestStreak, tempStreak);
 
-  // Current streak from today backwards
-  const todayDate = format(new Date(), 'yyyy-MM-dd');
-  if (uniqueDates[0] === today || uniqueDates[0] === format(subWeeks(new Date(), 0), 'yyyy-MM-dd')) {
+  // Current streak from today/yesterday backwards
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+  if (uniqueDates[0] === today || uniqueDates[0] === yesterday) {
     currentStreak = 1;
     for (let i = 1; i < uniqueDates.length; i++) {
       const prev = parseISO(uniqueDates[i - 1]);

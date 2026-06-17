@@ -137,9 +137,15 @@ export const useAppStore = create<AppStore>()(
       },
 
       removeActivity: (id) =>
-        set((state) => ({
-          activities: state.activities.filter(a => a.id !== id),
-        })),
+        set((state) => {
+          const newActivities = state.activities.filter(a => a.id !== id);
+          const streaks = calculateStreak(newActivities);
+          return {
+            activities: newActivities,
+            currentStreak: streaks.current,
+            longestStreak: Math.max(streaks.longest, state.longestStreak),
+          };
+        }),
 
       addGoal: (goal) =>
         set((state) => {
@@ -217,11 +223,15 @@ export const useAppStore = create<AppStore>()(
       importData: (json) => {
         try {
           const data = JSON.parse(json);
+          const activities = data.activities || [];
+          const streaks = calculateStreak(activities);
           set({
             profile: data.profile || defaultProfile,
-            activities: data.activities || [],
+            activities: activities,
             goals: data.goals || [],
             badges: data.badges || defaultBadges,
+            currentStreak: streaks.current,
+            longestStreak: Math.max(streaks.longest, data.longestStreak || 0),
           });
         } catch (e) {
           console.error('Failed to import data:', e);

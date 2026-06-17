@@ -54,9 +54,10 @@ function getTopCategory(activities: Activity[]): { category: Category; total: nu
 function getStreakContext(activities: Activity[]): { current: number; loggedToday: boolean } {
   const uniqueDates = [...new Set(activities.map(a => a.date))].sort().reverse();
   const today = format(new Date(), 'yyyy-MM-dd');
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
 
   let streak = 0;
-  if (uniqueDates[0] === today || uniqueDates[0] === format(subDays(new Date(), 0), 'yyyy-MM-dd')) {
+  if (uniqueDates[0] === today || uniqueDates[0] === yesterday) {
     streak = 1;
     for (let i = 1; i < uniqueDates.length; i++) {
       const prev = parseISO(uniqueDates[i - 1]);

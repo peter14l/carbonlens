@@ -55,11 +55,15 @@ export default function FootprintGauge() {
             className="transition-all duration-700 ease-out"
             style={{
               stroke:
-                progress < 0.5
-                  ? '#22c55e'
-                  : progress < 0.75
-                    ? '#eab308'
-                    : '#ef4444',
+                rating.label === 'Excellent'
+                  ? '#10b981'
+                  : rating.label === 'Good'
+                    ? '#22c55e'
+                    : rating.label === 'Average'
+                      ? '#eab308'
+                      : rating.label === 'Above Average'
+                        ? '#f97316'
+                        : '#ef4444',
             }}
           />
         </svg>
