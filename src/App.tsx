@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppStore } from './store/useAppStore';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Layout from './components/layout/Layout';
@@ -33,14 +33,16 @@ function AppRoutes() {
 }
 
 function App() {
+  const basename = window.location.pathname.startsWith('/carbonlens') ? '/carbonlens' : '';
+
   return (
     <ErrorBoundary>
-      <HashRouter>
-        <a href="#/main-content" className="skip-to-content">
+      <BrowserRouter basename={basename}>
+        <a href="#main-content" className="skip-to-content">
           Skip to main content
         </a>
         <AppRoutes />
-      </HashRouter>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 }
